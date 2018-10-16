@@ -23,6 +23,10 @@ public class Main {
 
         System.out.println("Char in INT is:" + intVar);
 
+        /*charVal = 'S';
+        intVar = charVal;
+        System.out.println("Char in charVal is:" + intVar);*/
+
         int n = 22/7; //loss of precision
         System.out.println("n = "+n);
 
