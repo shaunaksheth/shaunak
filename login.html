@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login App</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f2f7ff; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+    .login-card { background: white; border-radius: 14px; box-shadow: 0 16px 40px rgba(23, 54, 128, 0.12); width: 360px; padding: 32px; }
+    .login-card h1 { margin: 0 0 24px; font-size: 24px; color: #1d2a78; }
+    .login-card label { display: block; margin-bottom: 8px; font-size: 14px; color: #333; }
+    .login-card input { width: 100%; padding: 12px 14px; margin-bottom: 18px; border: 1px solid #cbd5e0; border-radius: 10px; box-sizing: border-box; }
+    .login-card button { width: 100%; padding: 12px; border: none; border-radius: 10px; background: #3b65ff; color: white; font-size: 16px; cursor: pointer; }
+    .login-card button:hover { background: #2d52d4; }
+    .message { margin-top: 16px; font-size: 14px; }
+    .message.success { color: #1f7f00; }
+    .message.error { color: #d32f2f; }
+  </style>
+</head>
+<body>
+  <div class="login-card">
+    <h1>Login</h1>
+    <form id="loginForm">
+      <label for="username">Username</label>
+      <input id="username" name="username" type="text" autocomplete="username" required />
+
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" autocomplete="current-password" required />
+
+      <button type="submit">Sign In</button>
+    </form>
+    <div id="message" class="message"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('loginForm');
+    const messageEl = document.getElementById('message');
+
+    form.addEventListener('submit', async event => {
+      event.preventDefault();
+      messageEl.textContent = 'Checking credentials...';
+      messageEl.className = 'message';
+
+      const data = {
+        username: form.username.value.trim(),
+        password: form.password.value.trim()
+      };
+
+      try {
+        const response = await fetch('/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          messageEl.textContent = 'Login successful! Welcome back.';
+          messageEl.classList.add('success');
+        } else {
+          messageEl.textContent = result.error || 'Login failed. Please check your credentials.';
+          messageEl.classList.add('error');
+        }
+      } catch (error) {
+        messageEl.textContent = 'Unable to reach the login service.';
+        messageEl.classList.add('error');
+      }
+    });
+  </script>
+</body>
+</html>
